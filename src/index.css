@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+@import "@fontsource/open-sans/400.css";
+@import "@fontsource/open-sans/600.css";
+@import "@fontsource/open-sans/700.css";
+
+@theme {
+  --color-switch-bg: var(--switch-bg);
+  --color-switch-popup: var(--switch-popup);
+  --color-switch-error: var(--switch-error);
+  --color-switch-focus: var(--switch-focus);
+  --color-switch-text: var(--switch-text);
+  --color-switch-text-info: var(--switch-text-info);
+  --color-switch-text-selected: var(--switch-text-selected);
+  --color-switch-selected-bg: var(--switch-selected-bg);
+  --color-switch-sidebar: var(--switch-sidebar);
+  --color-switch-line: var(--switch-line);
+  --color-switch-line-sep: var(--switch-line-sep);
+  --color-switch-highlight-1: var(--switch-highlight-1);
+  --color-switch-highlight-2: var(--switch-highlight-2);
+  --color-switch-hover-bg: var(--switch-hover-bg);
+}
+
+@layer base {
+  :root {
+    font-family: "Open Sans", system-ui, sans-serif;
+  }
+
+  /* Dark Theme (default) */
+  :root,
+  [data-theme="dark"] {
+    --switch-bg: #2d2d2d;
+    --switch-popup: #3a3b3c;
+    --switch-error: #fa5a3a;
+    --switch-focus: rgba(0, 0, 0, 0.7);
+    --switch-text: #ffffff;
+    --switch-text-info: #a0a0a0;
+    --switch-text-selected: #00ffc8;
+    --switch-selected-bg: #202227;
+    --switch-sidebar: #323232;
+    --switch-sidebar-focus: #212227;
+    --switch-line: #ffffff;
+    --switch-line-sep: #707070;
+    --switch-highlight-1: #1989c6;
+    --switch-highlight-2: #89f0f2;
+    --switch-hover-bg: #00ffc810;
+
+    --switch-scrollbar: #00ffc8;
+    --switch-scrollbar-bg: transparent;
+    --switch-progressbar: #00ffc8;
+    --switch-progressbar-bg: #464646;
+  }
+
+  /* Light Theme */
+  [data-theme="light"] {
+    --switch-bg: #ebebeb;
+    --switch-popup: #f0f0f0;
+    --switch-error: #fa5a3a;
+    --switch-focus: rgba(211, 211, 211, 0.63);
+    --switch-text: #2b2b2b;
+    --switch-text-info: #707070;
+    --switch-text-selected: #3250f0;
+    --switch-selected-bg: #fcfcfc;
+    --switch-sidebar: #f0f0f0;
+    --switch-sidebar-focus: #fdfdfd;
+    --switch-line: #2b2b2b;
+    --switch-line-sep: #6d787a;
+    --switch-highlight-1: #1989c6;
+    --switch-highlight-2: #4ff4d7;
+    --switch-hover-bg: #3250f010;
+
+    --switch-scrollbar: #b0b0b0;
+    --switch-scrollbar-bg: transparent;
+    --switch-progressbar: #3250f0;
+    --switch-progressbar-bg: #808080;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--color-switch-selected-bg);
+    color: var(--switch-text);
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--switch-scrollbar-bg);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--switch-scrollbar);
+    border-radius: 4px;
+  }
+
+  @keyframes pulse-focus {
+    0% {
+      outline-color: var(--switch-highlight-1);
+    }
+    50% {
+      outline-color: var(--switch-highlight-2);
+    }
+    100% {
+      outline-color: var(--switch-highlight-1);
+    }
+  }
+
+  .sidebar-shadow {
+    box-shadow:
+      0 50px 50px -50px var(--color-switch-bg) inset,
+      0 -50px 50px -50px var(--color-switch-bg) inset;
+  }
+
+  .switch-focus-ring:focus,
+  .switch-focus-within:focus-within {
+    outline: 3px solid var(--switch-highlight-1);
+    outline-offset: 0px;
+    animation: pulse-focus 850ms infinite;
+  }
+
+  .tab-border-selected::after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    width: 3px;
+    background-color: var(--switch-text-selected);
+  }
+
+  a {
+    color: var(--switch-text-selected);
+    text-decoration: underline;
+  }
+}
