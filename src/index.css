@@ -80,9 +80,6 @@
     min-height: 100vh;
     background-color: var(--color-switch-selected-bg);
     color: var(--switch-text);
-    transition:
-      background-color 0.3s,
-      color 0.3s;
   }
 
   /* Custom Scrollbar */
