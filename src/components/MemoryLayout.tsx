@@ -25,14 +25,14 @@ const MEMORY_LAYOUT = {
     {
       id: "ipc",
       label: "IPC Message buffer",
-      range: "0x0",
+      range: "0x0-0x100",
       boxClass: COLORS.cyan.box,
       textClass: COLORS.cyan.text,
     },
     {
       id: "kernel",
       label: "Kernel",
-      range: "0x100",
+      range: "0x100-0x108",
       boxClass: COLORS.blue.box,
       textClass: COLORS.blue.text,
       tooltip: "Various fields written by the kernel",
@@ -40,7 +40,6 @@ const MEMORY_LAYOUT = {
     {
       id: "conflict",
       label: "New!",
-      range: "0x108-0x110",
       boxClass: COLORS.purple.box,
       textClass: COLORS.purple.text,
       tooltip: "0x108-0x110: Added in 21.0.0 (CPU Time)",

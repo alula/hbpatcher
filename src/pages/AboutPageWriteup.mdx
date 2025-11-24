@@ -1,0 +1,36 @@
+import { MemoryLayout } from "../components/MemoryLayout";
+import { DIRTY_HACK_DISCORD_SOURCE, FW_19_FIX_SOURCE } from "../constants";
+
+## TL;DR
+
+Atmosphère integrates kernel optimizations from Firmware 21.0.0. This improves performance but breaks older homebrew compiled with libnx versions before v4.10.0, causing crashes that can occur on exit, during thread creation, or at runtime. If your homebrew is unmaintained, use this tool to patch the `.nro` files. If the app is still active, ask the developer to update it.
+
+### How this tool works
+
+This tool scans your `.nro` files to see if they contain old libnx code that writes to the conflicting memory region. If it detects a conflict, it patches certain [libnx functions to move their TLS writes](https://github.com/switchbrew/libnx/commit/cad06c006e4e0caf9c63755ac6c2a10a52333e27) from the conflicting offset `0x108` to the safe offset `0x180`.
+
+Note that the patches applied by this tool do **not** move the `ThreadVars` structure, which resides at the very end of the region. Effectively, this reduces (squeezes) the available space for TLS slots. While this works for the vast majority of homebrew, applications that use an unusually large number of TLS slots might overwrite critical thread data (and cause crashes - this is an edge case, patching this is out of scope for this tool).
+
+### Why the breakage happened
+
+The Thread Local Region is `0x200` bytes large. The first `0x180` bytes are effectively reserved for the kernel, while the last `0x80` bytes (`0x180-0x200`) are for userland. Official software respects this split, placing its TLS data at offset `0x180`.
+
+Previous versions of `libnx` chose to start user TLS slots at `0x108` (encroaching on the kernel's area) to maximize the number of available slots. This was safe until Firmware 21.0.0, where Nintendo added a new `thread_cpu_time` field at `0x108`.
+
+Now, the kernel writes to `0x108` on every thread switch, overwriting the TLS data that old homebrew stored there. This corruption causes the crashes.
+
+<MemoryLayout />
+
+### Why isn't this built into the Homebrew Loader?
+
+It might seem logical for the Homebrew Loader (`hbl`) to handle this automatically, but that's out of scope for it's intended purpose - being a simple host for homebrew that "juggles" between different .nro files.
+
+Trying to patch memory offsets on the fly is invasive and fragile; for example, if any of the patches get applied in a wrong context, it could break otherwise functioning homebrew. Even reliably determining the function to patch is a challenge, as many factors like compiler version and optimization flags come into play. This tool in particular focuses on binaries linked against prebuilt version of libnx shipped with devKitPro toolchain - as they appear to have relatively stable binary code signatures, so the patches mostly "just work".
+
+Furthermore, baking a patcher into the loader sets a bad precedent. The maintainers want to encourage proper fixes (recompilation) rather than relying on permanent "dirty hacks" within the OS itself. <a href={DIRTY_HACK_DISCORD_SOURCE} target="_blank" rel="noopener noreferrer">Source: Switchbrew</a>
+
+### Why Atmosphère didn't add a workaround
+
+Atmosphère aims to reimplement Nintendo's kernel logic 1:1. When Nintendo changes how the kernel works, Atmosphère must follow suit to ensure official games run correctly.
+
+While the developers have added quiet workarounds in the past (like the <a href={FW_19_FIX_SOURCE} target="_blank" rel="noopener noreferrer">19.0.0 debug flags</a>), this specific issue was too risky to mask. A workaround here would require adding conditional logic to the kernel scheduler - the most time-critical part of the system. Adding checks for "broken homebrew" during every thread switch would add complexity, potentially degrade performance system-wide, and could even introduce bugs in official games.

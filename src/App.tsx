@@ -16,12 +16,7 @@ function App() {
       case "about":
         return <AboutPage />;
       case "settings":
-        return (
-          <SettingsPage
-            appendSuffix={appendSuffix}
-            onAppendSuffixChange={setAppendSuffix}
-          />
-        );
+        return <SettingsPage appendSuffix={appendSuffix} onAppendSuffixChange={setAppendSuffix} />;
       default:
         return null;
     }

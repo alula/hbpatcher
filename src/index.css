@@ -136,4 +136,20 @@
     color: var(--switch-text-selected);
     text-decoration: underline;
   }
+
+  .switch-prose h2 {
+    @apply text-lg font-bold text-switch-text mt-5 mb-3;
+  }
+
+  .switch-prose h3 {
+    @apply text-base font-bold text-switch-text mt-5 mb-3;
+  }
+
+  .switch-prose p {
+    @apply text-switch-text-info text-sm leading-relaxed my-4;
+  }
+
+  .switch-prose ol {
+    @apply list-decimal list-inside space-y-1.5 text-switch-text-info text-sm ml-2;
+  }
 }
