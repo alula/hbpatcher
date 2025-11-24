@@ -3,6 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "license": "GPL-2.0+",
+  "author": "alula",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alula/hbpatcher"
+  },
+  "homepage": "https://github.com/alula/hbpatcher",
+  "bugs": {
+    "url": "https://github.com/alula/hbpatcher/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
