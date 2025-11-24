@@ -64,8 +64,16 @@ export function PatcherPage({ appendSuffix }: PatcherPageProps) {
 
         let downloadName = currentFile.name;
         if (appendSuffix) {
-          downloadName = downloadName.replace(/\.nro$/i, "_patched.nro");
-          if (downloadName === currentFile.name) downloadName += "_patched.nro";
+          const extensionMatch = downloadName.match(/\.(nro|ovl)$/i);
+          if (extensionMatch) {
+            const ext = extensionMatch[1].toLowerCase();
+            downloadName = downloadName.replace(
+              new RegExp(`\\.${ext}$`, "i"),
+              `_patched.${ext}`,
+            );
+          } else {
+            downloadName += "_patched";
+          }
         }
 
         a.download = downloadName;

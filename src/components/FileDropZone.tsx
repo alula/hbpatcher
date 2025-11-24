@@ -1,5 +1,6 @@
 import { FileDown } from "lucide-react";
 import { useRef, useState } from "react";
+import { SUPPORTED_EXTENSIONS } from "../constants";
 
 interface FileDropZoneProps {
   onFileSelected: (file: File) => void;
@@ -32,11 +33,7 @@ export function FileDropZone({ onFileSelected }: FileDropZoneProps) {
     setIsDragging(false);
 
     const files = Array.from(e.dataTransfer.files);
-    const nroFile = files.find((file) => file.name.endsWith(".nro"));
-
-    if (nroFile) {
-      onFileSelected(nroFile);
-    } else if (files.length > 0) {
+    if (files.length > 0) {
       onFileSelected(files[0]);
     }
   };
@@ -81,7 +78,6 @@ export function FileDropZone({ onFileSelected }: FileDropZoneProps) {
       <input
         ref={fileInputRef}
         type="file"
-        accept=".nro"
         onChange={handleFileInput}
         className="hidden"
       />
@@ -90,9 +86,11 @@ export function FileDropZone({ onFileSelected }: FileDropZoneProps) {
           <FileDown size={48} strokeWidth={1.5} />
         </div>
         <h3 className="text-switch-text text-xl font-normal">
-          {isDragging ? "Drop file now" : "Select NRO File"}
+          {isDragging ? "Drop file now" : "Select File"}
         </h3>
-        <p className="text-switch-text-info">Drag & drop or click to browse</p>
+        <p className="text-switch-text-info">
+          Drag & drop or click to browse ({SUPPORTED_EXTENSIONS.join(", ")})
+        </p>
       </div>
     </div>
   );
